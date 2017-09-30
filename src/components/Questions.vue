@@ -7,8 +7,8 @@
         <div class="wrapper-qstn">
           <div class="qstn-header">
             <div class="qstn-title">{{this.status.name}}</div>
-            <div class="qstn-description">一年一度的谷歌开发者节大会即将举行，即刻报名加入我们的年度分享会吧！ 时间：2017 年 10 月 21 日 地址：上海市浦东新区博云路2号 ( 浦软大厦 ) </div>
-            <div class="qstn-legend"></div>
+            <div class="qstn-description">{{this.status.description}} </div>
+            <div class="qstn-legend">{{this.status.legend}}</div>
           </div>
           <div class="qstn-list">
             <mu-card v-for="(item, index) in items" :key="index">
@@ -27,9 +27,9 @@
           <mu-raised-button label="下一页" class="raised-button" primary/>
         </div>
       </mu-paper>
-    </div>
-    <div id="footer">
-
+      <div class="copyright">
+        <p>Copyright &copy; 2017 Shanghai University Open Source Community</p>
+      </div>
     </div>
   </div>
 </template>
@@ -124,7 +124,7 @@ export default {
           }
         })
     },
-    loadQuestions: function () {},
+    loadQuestions: function () { },
     postAnswer: function (index) {
       console.log(this.answers[index].answer)
       this.$http.post('/', this.answers[index])
@@ -221,5 +221,9 @@ export default {
 }
 .raised-button {
   float left;
+}
+.copyright {
+  margin-bottom 0;
+  padding-bottom 20px;
 }
 </style>
