@@ -1,5 +1,34 @@
 <template>
   <div id="index">
+    <div id="stepper">
+      <mu-stepper :activeStep="0">
+        <mu-step>
+          <mu-step-label>
+            报名
+          </mu-step-label>
+        </mu-step>
+        <mu-step>
+          <mu-step-label>
+            预选赛
+          </mu-step-label>
+        </mu-step>
+        <mu-step>
+          <mu-step-label>
+            团体赛
+          </mu-step-label>
+        </mu-step>
+        <mu-step>
+          <mu-step-label>
+            复活赛
+          </mu-step-label>
+        </mu-step>
+        <mu-step>
+          <mu-step-label>
+            个人赛
+          </mu-step-label>
+        </mu-step>
+      </mu-stepper>
+    </div>
     <div id="login">
       <mu-card>
         <mu-card-header>
@@ -40,9 +69,19 @@
     margin 0
     height 100%
   
+  #stepper
+    padding-top 100px
+    width 80%
+    margin 0 auto
+    .mu-step-label
+      font-size 20px
+    .mu-step-label.active
+        color #fff !important
+      
   #login
     width 400px
-    margin 250px auto 0
+    margin 0 auto
+    padding 100px 0
   
   .mu-card
     background-color rgba(255, 255, 255, 0.9)
