@@ -1,22 +1,19 @@
-# justsoso
+# JustSearchContest
 
-> A Vue.js project
+> Just搜搜比赛系统前端
 
 ## Build Setup
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 启动测试服务器
 npm run dev
 
-# build for production with minification
+# 生产模式打包
 npm run build
 
-# build for production and view the bundle analyzer report
+# 打包并查看分析报告
 npm run build --report
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-# JustSearchContest
