@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // import Hello from '@/components/Hello'
 
 import Index from '@/components/Index'
+import Questions from '@/components/Questions'
 
 Vue.use(Router)
 
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index
+    },
+    {
+      path: '/Questions',
+      name: 'Questions',
+      component: Questions
     }
   ]
 })
