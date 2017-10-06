@@ -6,6 +6,7 @@ import Questions from '@/components/Questions'
 import Login from '@/components/Login.vue'
 import Information from '@/components/Information.vue'
 import About from '@/components/About.vue'
+import Center from '@/components/Center.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/about',
       name: 'About',
       component: About
+    },
+    {
+      path: '/center',
+      name: 'Center',
+      component: Center
     }
   ]
 })

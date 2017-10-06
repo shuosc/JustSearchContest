@@ -1,14 +1,17 @@
 const state = {
-  user: {
-    card_id: '',
+  account: {
+    cardID: '',
+    name: '',
     password: '',
+    avatar: '',
+    token: '',
     loginState: false
   }
 }
 
 const mutations = {
-  login: function (state) {
-    state.loginState = true
+  login: function (state, payload) {
+    state.account = payload
   },
   logout: function (state) {
     // 提交答案函数

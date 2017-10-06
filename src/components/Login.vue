@@ -35,33 +35,48 @@
           登录
         </mu-card-header>
         <div id="input">
-          <mu-text-field label="一卡通账号" labelFloat icon=":iconfont icon-account" :maxLength="8" />
-          <mu-text-field label="密码" :type="passwordVisible?'text':'password'" labelFloat
-                         icon=":iconfont icon-password" />
-          <mu-checkbox uncheckIcon=":iconfont icon-invisible" checkedIcon=":iconfont icon-visible"
-                       v-model="passwordVisible" />
+          <mu-text-field label="一卡通账号" labelFloat icon=":iconfont icon-account" :maxLength="8" v-model="cardID" />
+          <mu-text-field label="密码" :type="passwordVisible?'text':'password'" labelFloat v-model="password" icon=":iconfont icon-password" />
+          <mu-checkbox uncheckIcon=":iconfont icon-invisible" checkedIcon=":iconfont icon-visible" v-model="passwordVisible" />
         </div>
-        <mu-raised-button label="登录" primary />
+        <mu-raised-button label="登录" primary @click.native="onLoginClick" />
       </mu-card>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default {
-    name: 'index',
-    data: function () {
-      return {
-        passwordVisible: false,
-        showLogin: false
-      }
-    },
-    methods: {
-      clickLogin: function () {
-        this.showLogin = true
-      }
+export default {
+  name: 'index',
+  data: function () {
+    return {
+      password: '',
+      cardID: '',
+      passwordVisible: false,
+      showLogin: false
+    }
+  },
+  methods: {
+    onLoginClick: function () {
+      this.$http.post('/api/login/', {
+        card_id: this.cardID,
+        password: this.password
+      }).then((response) => {
+        console.log(response)
+        let data = response.data
+        console.log(this.$store.state.user)
+        this.$store.commit('login', {
+          cardID: data.id,
+          name: data.name,
+          avatar: data.avatar,
+          token: data.token,
+          loginState: true
+        })
+      })
+      this.showLogin = true
     }
   }
+}
 </script>
 
 <style lang="stylus" scoped>
