@@ -11,10 +11,10 @@
             <div class="qstn-legend">{{this.status.legend}}</div>
           </div>
           <div class="qstn-list">
-            <mu-card v-for="(item, index) in items" :key="index">
+            <mu-card v-for="(item, index) in questions" :key="index">
               <mu-card-title :title="index + 1 + '、 ' + item.title" />
               <mu-card-text v-for="(option, oindex) in item.options" :key="oindex">
-                <mu-radio :label='option.name' :name="'group' + index" :nativeValue="'option' + oindex" v-model="answers[index].answer" class="demo-radio" /> <br/>
+                <mu-radio :label='option' :name="'group' + index" :nativeValue="'option' + oindex" v-model="answers[index].answer" class="demo-radio" /> <br/>
               </mu-card-text>
               <mu-card-actions class="item-actions">
                 <mu-flat-button :label="item.updateButtonLabel" @click="postAnswer(index)" :disable="item.updateButtonIsDisable" />
@@ -45,55 +45,21 @@ export default {
       allItems: [],
       currentPage: '',
       allPages: '',
-      items: [
-        {
-          title: 'What are the names of people attending?',
-          options: [
-            {
-              name: '选项1'
-            },
-            {
-              name: '选项2'
-            },
-            {
-              name: '选项3'
-            },
-            {
-              name: '选项4'
-            }
-          ],
-          updateButtonLabel: '提交答案',
-          updateButtonIsDisable: true
-        },
-        {
-          title: 'What are the names of people attending?',
-          options: [
-            {
-              name: '选项1'
-            },
-            {
-              name: '选项2'
-            },
-            {
-              name: '选项3'
-            },
-            {
-              name: '选项4'
-            }
-          ],
-          updateButtonLabel: '提交答案',
-          updateButtonIsDisable: false
-        }
-      ],
+      questions: [],
       answers: [
         {
-          answer: ''
+          answer: '',
+          changeAble: true
         },
         {
-          answer: ''
+          answer: '',
+          changeAble: true
         }
       ]
     }
+  },
+  created () {
+    this.getAllQuestions()
   },
   methods: {
     loadInfo: function () {
@@ -105,22 +71,26 @@ export default {
         })
     },
     getAllQuestions: function () {
-      this.$http.get('/')
-        .then(function (response) {
-          for (var i = 1; i < response.lenth(); i++) {
-            this.allItems.title = response.title
-            this.allItems.options = response.options
-            this.allItems.$set('updateButtonLabel', '提交答案')
-            this.allItems.$set('updateButtonIsDisable', false)
-            this.answers.$push({
+      this.$http.get(`/api/questionset/0/questions/`)
+        .then((response) => {
+          for (var i = 1; i < response.data.length; i++) {
+            this.questions.push({
+              title: response.data[i].content,
+              options: response.data[i].options
+            })
+            // this.allItems.title = response.data[i].content
+            // this.allItems.options = response.data[i].options
+            // this.allItems.$set('updateButtonLabel', '提交答案')
+            // this.allItems.$set('updateButtonIsDisable', false)
+            this.answers.push({
               answer: ''
             })
           }
           // 加载全部页数
-          if (response.lenth() % 20 === 0) {
-            this.allPages = response.lenth() / 20
+          if (response.data.length % 20 === 0) {
+            this.allPages = response.data.length / 20
           } else {
-            this.allPages = response.lenth() / 20 + 1
+            this.allPages = response.data.length / 20 + 1
           }
         })
     },

@@ -18,11 +18,11 @@
 
 ### get
 
-## `api/teams/<team_id>/`
+## `api/teams/`
 
 ## get
 
-## `api/teams/<team_id>/members/`
+## `api/teams/members/`
 
 ### get
 
@@ -30,17 +30,17 @@
 
 ### delete
 
-## `api/questionset/<team_id>/<stage>/questions/`
+## `api/questionset/<stage>/questions/`
 
 ### get
 
-## `api/questionset/<team_id>/<stage>/answers/`
+## `api/questionset/<stage>/answers/`
 
 ### get
 
 ### post
 
-## `api/questionset/<team_id>/<stage>/finish/`
+## `api/questionset/<stage>/finish/`
 
 ## get
 
