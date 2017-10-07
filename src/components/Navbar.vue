@@ -2,8 +2,8 @@
   <div id="navbar">
     <mu-appbar>
       <mu-flat-button color="white" label="登录" slot="right" icon=":iconfont icon-login" @click="goPath('/login')" v-if="!loginState"></mu-flat-button>
-      <mu-flat-button color="white" label="个人中心" slot="right" v-else @click="goPath('/center')"></mu-flat-button>
-      <mu-flat-button color="white" label="开始答题" slot="right" icon=":iconfont icon-rules" @click="goPath('/questions')"></mu-flat-button>
+      <mu-flat-button color="white" label="个人中心" slot="right" icon=":iconfont icon-person" v-else @click="goPath('/center')"></mu-flat-button>
+      <mu-flat-button color="white" label="开始答题" slot="right" icon=":iconfont icon-question" @click="goPath('/questions')"></mu-flat-button>
        <!-- <mu-flat-button color="white" label="排行榜" slot="right" icon=":iconfont icon-rules" @click="goPath('/rank')"></mu-flat-button> -->
       <mu-flat-button color="white" label="比赛须知" slot="right" icon=":iconfont icon-rules" @click="goPath('/information')"></mu-flat-button>
       <mu-flat-button color="white" label="关于" slot="right" icon=":iconfont icon-information" @click="goPath('/about')"></mu-flat-button>

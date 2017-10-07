@@ -141,13 +141,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-#header {
-  height 250px;
+#index
+  min-height 100vh
+
+#header
+  min-height 25vh
   background-color #3C3C3C;
-}
-#main-content {
-  background-color rgb(228,229,207);
-}
+
+#main-content
+  background-color rgb(228,229,207)
+  min-height 75vh
+  
 .demo-paper {
   display: inline-block;
   width: 70%;

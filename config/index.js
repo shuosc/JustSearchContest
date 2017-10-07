@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://soso.shuhelper.cn/api/',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
