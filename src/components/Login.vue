@@ -1,34 +1,6 @@
 <template>
   <div id="index">
-    <div id="stepper">
-      <mu-stepper :activeStep="0">
-        <mu-step>
-          <mu-step-label>
-            报名
-          </mu-step-label>
-        </mu-step>
-        <mu-step>
-          <mu-step-label>
-            预选赛
-          </mu-step-label>
-        </mu-step>
-        <mu-step>
-          <mu-step-label>
-            团体赛
-          </mu-step-label>
-        </mu-step>
-        <mu-step>
-          <mu-step-label>
-            复活赛
-          </mu-step-label>
-        </mu-step>
-        <mu-step>
-          <mu-step-label>
-            个人赛
-          </mu-step-label>
-        </mu-step>
-      </mu-stepper>
-    </div>
+    <stepper></stepper>
     <div id="login">
       <mu-card>
         <mu-card-header>
@@ -46,8 +18,12 @@
 </template>
 
 <script type="text/ecmascript-6">
+import Stepper from '@/components/Stepper.vue'
 export default {
   name: 'index',
+  components: {
+    Stepper
+  },
   data: function () {
     return {
       password: '',

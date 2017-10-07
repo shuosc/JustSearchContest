@@ -1,30 +1,36 @@
 <template>
   <div id="index">
-    <div id="header"></div>
+    <div id="header">
+      <stepper/>
+    </div>
     <div id="main-content">
       <mu-paper class="demo-paper" :zDepth="1">
-        <div class="banner-top"></div>
+        <div class="banner-top">
+
+        </div>
         <div class="wrapper-qstn">
           <div class="qstn-header">
             <div class="qstn-title">{{this.status.name}}</div>
             <div class="qstn-description">{{this.status.description}} </div>
             <div class="qstn-legend">{{this.status.legend}}</div>
           </div>
+
           <div class="qstn-list">
-            <mu-card v-for="(item, index) in questions" :key="index">
+            <mu-card v-for="(item, index) in questions.slice((currentPage-1)*pageSize,currentPage*pageSize)" :key="index">
               <mu-card-title :title="index + 1 + '、 ' + item.title" />
               <mu-card-text v-for="(option, oindex) in item.options" :key="oindex">
-                <mu-radio :label='option' :name="'group' + index" :nativeValue="'option' + oindex" v-model="answers[index].answer" class="demo-radio" /> <br/>
+                <mu-radio :disabled="answers[index+realIndex].maxtry===0 && answers[index+realIndex].selection!==oindex" :label='option' :name="'group' + index" :nativeValue="oindex" v-model="answers[index+realIndex].selection" class="demo-radio" /> <br/>
               </mu-card-text>
               <mu-card-actions class="item-actions">
-                <mu-flat-button :label="item.updateButtonLabel" @click="postAnswer(index)" :disable="item.updateButtonIsDisable" />
+                <mu-flat-button :label="answers[index+realIndex].maxtry===2?'提交答案':'修改答案'" @click="postAnswer(index+realIndex)" :disabled="answers[index+realIndex].maxtry===0" />
               </mu-card-actions>
             </mu-card>
             <mu-divider />
           </div>
         </div>
         <div class="page-control">
-          <mu-raised-button label="下一页" class="raised-button" primary/>
+          <mu-pagination :current="currentPage" :total="total" @pageChange="pageChange">
+          </mu-pagination>
         </div>
       </mu-paper>
       <div class="copyright">
@@ -35,7 +41,11 @@
 </template>
 
 <script type="text/ecmascript-6">
+import Stepper from '@/components/Stepper.vue'
 export default {
+  components: {
+    Stepper
+  },
   data () {
     return {
       status: {
@@ -43,25 +53,30 @@ export default {
         code: ''
       },
       allItems: [],
-      currentPage: '',
-      allPages: '',
+      currentPage: 1,
       questions: [],
-      answers: [
-        {
-          answer: '',
-          changeAble: true
-        },
-        {
-          answer: '',
-          changeAble: true
-        }
-      ]
+      answers: [],
+      pageSize: 5,
+      total: 10
     }
+  },
+  computed: {
+    realIndex: function () {
+      return (this.currentPage - 1) * this.pageSize
+    }
+    // total: function () {
+    //   return this.questions.length
+    // }
   },
   created () {
     this.getAllQuestions()
+    // console.log(this.currentPage)
   },
   methods: {
+    pageChange: function (page) {
+      this.currentPage = page
+      console.log(page)
+    },
     loadInfo: function () {
     },
     getStatus: function () {
@@ -78,34 +93,31 @@ export default {
               title: response.data[i].content,
               options: response.data[i].options
             })
-            // this.allItems.title = response.data[i].content
-            // this.allItems.options = response.data[i].options
-            // this.allItems.$set('updateButtonLabel', '提交答案')
-            // this.allItems.$set('updateButtonIsDisable', false)
             this.answers.push({
               answer: ''
             })
           }
-          // 加载全部页数
-          if (response.data.length % 20 === 0) {
-            this.allPages = response.data.length / 20
-          } else {
-            this.allPages = response.data.length / 20 + 1
-          }
+          this.total = response.data.length
+          this.getAllAnswers()
+        })
+    },
+    getAllAnswers: function () {
+      this.$http.get('/api/questionset/0/answers/')
+        .then((response) => {
+          this.answers = response.data
         })
     },
     loadQuestions: function () { },
     postAnswer: function (index) {
-      console.log(this.answers[index].answer)
-      this.$http.post('/', this.answers[index])
-        .then(function (response) {
-          this.answers = response
-          if (this.answers[index].changeAble === true) {
-            this.items[index].updateButtonLabel = '修改答案'
-          } else {
-            this.items[index].updateButtonLabel = '不可修改'
-            this.items[index].updateButtonIsDisable = true
-          }
+      if (this.answers[index].selection === -1) {
+        alert('请先选择')
+        return
+      }
+      this.$http.post(`/api/questionset/0/answers/`, { index: index, selection: this.answers[index].selection })
+        .then((response) => {
+          this.answers[index].selection = response.data.selection
+          this.answers[index].maxtry = response.data.maxtry
+          // console.log(this.answers)
         })
         .catch(function (error) {
           console.log(error)
