@@ -48,6 +48,15 @@ export default {
           token: data.token,
           loginState: true
         })
+        if (this.$route.query.team) {
+          this.$http.post(`/api/teams/${this.$route.query.team}/members/`, {})
+            .then((response) => {
+              // console.log(response)
+              this.$router.push('/center')
+            })
+        } else {
+          this.$router.push('/center')
+        }
       })
       this.showLogin = true
     }

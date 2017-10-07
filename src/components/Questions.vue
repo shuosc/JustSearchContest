@@ -6,15 +6,14 @@
     <div id="main-content">
       <mu-paper class="demo-paper" :zDepth="1">
         <div class="banner-top">
-
         </div>
         <div class="wrapper-qstn">
           <div class="qstn-header">
             <div class="qstn-title">{{this.status.name}}</div>
             <div class="qstn-description">{{this.status.description}} </div>
-            <div class="qstn-legend">{{this.status.legend}}</div>
+            <div class="qstn-legend" style="text-align:center;">{{progress}}/{{total}}已提交</div>
           </div>
-
+          <mu-linear-progress mode="determinate" :value="progress" :max="total" />
           <div class="qstn-list">
             <mu-card v-for="(item, index) in questions.slice((currentPage-1)*pageSize,currentPage*pageSize)" :key="index">
               <mu-card-title :title="index + 1 + '、 ' + item.title" />
@@ -22,6 +21,7 @@
                 <mu-radio :disabled="answers[index+realIndex].maxtry===0 && answers[index+realIndex].selection!==oindex" :label='option' :name="'group' + index" :nativeValue="oindex" v-model="answers[index+realIndex].selection" class="demo-radio" /> <br/>
               </mu-card-text>
               <mu-card-actions class="item-actions">
+                <mu-flat-button :label="answers[index+realIndex].maxtry===2?'未提交':'已提交'" />
                 <mu-flat-button :label="answers[index+realIndex].maxtry===2?'提交答案':'修改答案'" @click="postAnswer(index+realIndex)" :disabled="answers[index+realIndex].maxtry===0" />
               </mu-card-actions>
             </mu-card>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="page-control">
-          <mu-pagination :current="currentPage" :total="total" @pageChange="pageChange">
+          <mu-pagination :current="currentPage" :pageSize="pageSize" :total="total" @pageChange="pageChange">
           </mu-pagination>
         </div>
       </mu-paper>
@@ -57,12 +57,22 @@ export default {
       questions: [],
       answers: [],
       pageSize: 5,
-      total: 10
+      total: 10,
+      stage: 0
     }
   },
   computed: {
     realIndex: function () {
       return (this.currentPage - 1) * this.pageSize
+    },
+    progress: function () {
+      let selected = 0
+      for (let i = 0; i < this.answers.length; i++) {
+        if (this.answers[i].maxtry !== 2) {
+          selected++
+        }
+      }
+      return selected
     }
     // total: function () {
     //   return this.questions.length
@@ -70,6 +80,9 @@ export default {
   },
   created () {
     this.getAllQuestions()
+    this.$http.get('/api/stage/').then((response) => {
+      this.stage = response.data
+    })
     // console.log(this.currentPage)
   },
   methods: {
@@ -86,7 +99,7 @@ export default {
         })
     },
     getAllQuestions: function () {
-      this.$http.get(`/api/questionset/0/questions/`)
+      this.$http.get(`/api/questionset/${this.stage}/questions/`)
         .then((response) => {
           for (var i = 1; i < response.data.length; i++) {
             this.questions.push({
@@ -172,7 +185,7 @@ export default {
 }
 .qstn-list {
   margin-top 10px;
-  padding 40px 150px
+  // padding 40px 150px
   padding-bottom 0
 }
 .qstn-card {
