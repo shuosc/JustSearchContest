@@ -22,8 +22,7 @@ const mutations = {
     state.account = payload
   },
   logout: function (state) {
-    // 提交答案函数
-    state.loginState = false
+    state.account.loginState = false
   },
   updateTeam: function (state, payload) {
     state.team = payload

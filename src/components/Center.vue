@@ -15,31 +15,22 @@
     <mu-flexbox style="margin-bottom:10px;">
       <mu-flexbox-item>
         <mu-paper :zDepth="1">
-          <mu-card v-if="team">
+          <mu-card v-if="team.name">
             <mu-card-title title="队伍信息" subTitle="Team Info" />
-            <mu-card-header :title="team.name + '队'" :subTitle="team._id.$oid">
+            <mu-card-header :title="team.name + '队'" :subTitle="team.id">
               <mu-avatar :src="`https://static.shuhelper.cn/avatar_default.jpg`" slot="avatar" />
             </mu-card-header>
-
             <mu-list>
               <mu-sub-header>队员</mu-sub-header>
               <mu-list-item :title="member.name" v-for="(member,index) in team.members" :key="member">
-                <mu-avatar :src="`https://static.shuhelper.cn/${member.avatar}`" slot="leftAvatar" />{{member.name}}
-                <div slot="right" v-if="true">
-                  <mu-flat-button v-if="index===0" slot="right" @click="removeMember(index)">解散队伍</mu-flat-button>
-                  <mu-flat-button v-else @click="removeMember(index)">踢出队伍</mu-flat-button>
-                </div>
-                <div slot="right" v-else>
-                  <mu-flat-button v-if="true" @click="removeMember(index)">退出队伍</mu-flat-button>
-                </div>
+                <mu-avatar :src="`https://static.shuhelper.cn/${member.avatar}`" slot="leftAvatar" />{{member._id}}
               </mu-list-item>
             </mu-list>
             <mu-card-text>
               <mu-flat-button primary>加队链接:</mu-flat-button>
-              http://soso.shuhelper.cn/#/login/?team={{team._id.$oid}}<br/>
+              http://soso.shuhelper.cn/#/login/?team={{team.id}}<br/>
               <mu-flat-button primary>说明:</mu-flat-button>
               <span style="color:grey;font-size:0.8rem">将这个链接复制给您的队友，队友登陆后自动加入本队。</span>
-
             </mu-card-text>
           </mu-card>
           <mu-card v-else>
@@ -71,16 +62,29 @@
               <mu-card-text>
                 <mu-table>
                   <mu-tr>
+                    <mu-th>赛程</mu-th>
+                    <mu-td>最终排名(赛程结束后显示)</mu-td>
+                    <mu-td>最终分数(赛程结束后显示)</mu-td>
+                  </mu-tr>
+                  <mu-tr>
                     <mu-th>预选赛</mu-th>
+                    <mu-td v-if="stage>0">{{personalTeam.ranks[0] + 1}}/{{teamCount[0]}}</mu-td>
+                    <mu-td v-if="stage>0">{{personalTeam.points[0]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>团体赛</mu-th>
+                    <mu-td v-if="stage>1">{{personalTeam.ranks[1] + 1}}/{{teamCount[1]}}</mu-td>
+                    <mu-td v-if="stage>1">{{personalTeam.points[1]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>复活赛</mu-th>
+                    <mu-td v-if="stage>2">{{personalTeam.ranks[2] + 1}}/{{teamCount[2]}}</mu-td>
+                    <mu-td v-if="stage>2">{{personalTeam.points[2]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>个人赛</mu-th>
+                    <mu-td v-if="stage>3">{{personalTeam.ranks[3] +1 }}/{{teamCount[3]}}</mu-td>
+                    <mu-td v-if="stage>3">{{personalTeam.points[3]}}</mu-td>
                   </mu-tr>
                 </mu-table>
               </mu-card-text>
@@ -102,11 +106,18 @@ export default {
       team: {},
       joinDialog: false,
       createDialog: false,
-      teamName: ''
+      teamName: '',
+      personalTeam: {},
+      teamCount: [0, 0, 0, 0],
+      stage: 0
     }
   },
   created () {
-    this.getTeam()
+    this.$http.get('/api/stage/').then((response) => {
+      this.stage = response.data.stage
+      this.countTeam()
+      this.getTeam()
+    })
   },
   computed: {
     user: function () {
@@ -114,10 +125,21 @@ export default {
     }
   },
   methods: {
+    countTeam: function () {
+      this.$http.get('/api/teams/count/')
+        .then((response) => {
+          this.teamCount = response.data
+        })
+    },
     getTeam: function () {
-      this.$http.get('/api/teams/my/').then((response) => {
-        this.team = response.data[0]
-      })
+      this.$http.get('/api/teams/my/')
+        .then((response) => {
+          this.team = response.data.team
+          this.personalTeam = response.data.personal_team
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     openJoin: function () {
       this.joinDialog = true

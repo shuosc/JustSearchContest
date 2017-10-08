@@ -7,6 +7,7 @@ import Login from '@/components/Login.vue'
 import Information from '@/components/Information.vue'
 import About from '@/components/About.vue'
 import Center from '@/components/Center.vue'
+import Rank from '@/components/Rank.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/center',
       name: 'Center',
       component: Center
+    },
+    {
+      path: '/rank',
+      name: 'Rank',
+      component: Rank
     }
   ]
 })

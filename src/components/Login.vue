@@ -11,7 +11,8 @@
           <mu-text-field label="密码" :type="passwordVisible?'text':'password'" labelFloat v-model="password" icon=":iconfont icon-password" />
           <mu-checkbox uncheckIcon=":iconfont icon-invisible" checkedIcon=":iconfont icon-visible" v-model="passwordVisible" />
         </div>
-        <mu-raised-button label="登录" primary @click.native="onLoginClick" />
+        <mu-raised-button primary @click.native="onLoginClick" :disabled="loading">
+          <mu-circular-progress v-if="loading" :size="20" />登录</mu-raised-button>
       </mu-card>
     </div>
   </div>
@@ -29,18 +30,18 @@ export default {
       password: '',
       cardID: '',
       passwordVisible: false,
-      showLogin: false
+      showLogin: false,
+      loading: false
     }
   },
   methods: {
     onLoginClick: function () {
+      this.loading = true
       this.$http.post('/api/login/', {
         card_id: this.cardID,
         password: this.password
       }).then((response) => {
-        console.log(response)
         let data = response.data
-        console.log(this.$store.state.user)
         this.$store.commit('login', {
           cardID: data.id,
           name: data.name,
@@ -58,6 +59,10 @@ export default {
           this.$router.push('/center')
         }
       })
+        .catch((err) => {
+          console.log(err)
+          this.loading = false
+        })
       this.showLogin = true
     }
   }
