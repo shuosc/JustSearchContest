@@ -9,24 +9,30 @@
         </div>
         <div class="wrapper-qstn">
           <div class="qstn-header">
-            <div class="qstn-title">{{this.status.name}}
-              <mu-flat-button primary style="float:right;" @click="onFinishClick">{{ finish?"已提交":"提交答卷"}}</mu-flat-button>
-              <!-- <mu-flat-button primary style="float:right;" @click="finish">{{ clock}}</mu-flat-button> -->
+            <div class="qstn-title">{{stage
+              <0? '报名阶段':STAGE[stage]}} 
+              
+              <mu-flat-button v-if="questions.length" primary style="float:right;" @click="onFinishClick">{{ finish?"已提交":"提交答卷"}}</mu-flat-button>
+              <mu-flat-button  style="float:right;margin-right:20px;" @click="getAllAnswers">刷新答案</mu-flat-button>
+              
+                <!-- <mu-flat-button primary style="float:right;" @click="finish">{{ clock}}</mu-flat-button> -->
             </div>
             <div class="qstn-description">
               <br/>* 在结束之前，您可以点击提交答卷按钮提前结束，提前结束将得到时间奖励，答题得分相同时，排名按所耗时间加罚时决定。
               <br/>* 每一道题目都需要手动点击题目右下角的提交按钮来提交答案，并且每个题目有一次修改机会，但是每次错误提交都会导致罚时。
+              <br/>* 小组中的任何人都可以提交题目，请做好沟通以避免冲突
               <!-- {{this.status.description}}当前时间：{{clock}} -->
-              <br/>当前比赛于 {{timeLeft}}结束
+              <br/>
+              <span v-if="stage>=0">当前比赛于 {{timeLeft}}结束</span>
               <br/>下一场比赛于{{timeToNext}}开始</div>
-            <div class="qstn-legend" style="text-align:center;">{{progress}}/{{total}}已提交</div>
+            <div class="qstn-legend" style="text-align:center;" v-if="questions.length">{{progress}}/{{total}}已提交</div>
           </div>
-          <mu-linear-progress mode="determinate" :value="progress" :max="total" />
-          <div class="page-control">
+          <mu-linear-progress mode="determinate" :value="progress" :max="total" v-if="questions.length" />
+          <div class="page-control" v-if="questions.length">
             <mu-pagination :current="currentPage" :pageSize="pageSize" :total="total" @pageChange="pageChange">
             </mu-pagination>
           </div>
-          <div class="qstn-list">
+          <div v-if="questions.length" class="qstn-list">
             <mu-card v-for="(item, index) in questions.slice((currentPage-1)*pageSize,currentPage*pageSize)" :key="index">
               <mu-card-title :title="index + 1 + '、 ' + item.title" />
               <mu-card-text v-for="(option, oindex) in item.options" :key="oindex">
@@ -39,8 +45,13 @@
             </mu-card>
             <mu-divider />
           </div>
+          <div v-else>
+            <mu-card style="height:100px;text-align:center;margin:20px;">
+              <mu-card-title title="您在当前阶段没有题目" />
+            </mu-card>
+          </div>
         </div>
-        <div class="page-control">
+        <div class="page-control" v-if="questions.length">
           <mu-pagination :current="currentPage" :pageSize="pageSize" :total="total" @pageChange="pageChange">
           </mu-pagination>
         </div>
@@ -53,6 +64,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+/* eslint-disable no-unused-vars */
+// const STAGE = ['预选赛', '团体赛', '复活赛', '个人赛']
 const STAGETIME = [
   new Date(2017, 9, 15, 0, 0, 0, 0),
   new Date(2017, 9, 23, 0, 0, 0, 0),
@@ -85,7 +98,8 @@ export default {
       timerID: '',
       clock: '',
       timeLeft: '',
-      timeToNext: ''
+      timeToNext: '',
+      STAGE: ['预选赛', '团体赛', '复活赛', '个人赛']
     }
   },
   computed: {
@@ -103,6 +117,11 @@ export default {
     }
   },
   created () {
+    console.log(this.$store.state.user)
+    if (this.$store.state.user.team.name === '') {
+      alert('您必须参与一个小组方可开始答题')
+      this.$router.push('/center')
+    }
     this.$http.get('/api/stage/').then((response) => {
       this.stage = response.data.stage
       this.getAllQuestions()
@@ -195,7 +214,8 @@ export default {
   min-height 100vh
 
 #header
-  min-height 25vh
+  min-height 200px
+  max-height 25vh
   background-color #3C3C3C;
 
 #main-content

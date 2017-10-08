@@ -52,8 +52,13 @@ export default {
         if (this.$route.query.team) {
           this.$http.post(`/api/teams/${this.$route.query.team}/members/`, {})
             .then((response) => {
-              // console.log(response)
-              this.$router.push('/center')
+              this.loading = false
+              if (!response.data.success) {
+                alert(response.data.reason)
+                this.$router.push('/center')
+              } else {
+                this.$router.push('/center')
+              }
             })
         } else {
           this.$router.push('/center')

@@ -50,7 +50,7 @@ export default {
 
 <style lang="stylus" scoped>
   #stepper
-    padding-top 50px
+    padding-top 0
     width 90%
     margin 0 auto
     .mu-step-label

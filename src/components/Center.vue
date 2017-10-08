@@ -15,7 +15,7 @@
     <mu-flexbox style="margin-bottom:10px;">
       <mu-flexbox-item>
         <mu-paper :zDepth="1">
-          <mu-card v-if="team.name">
+          <mu-card v-if="team">
             <mu-card-title title="队伍信息" subTitle="Team Info" />
             <mu-card-header :title="team.name + '队'" :subTitle="team.id">
               <mu-avatar :src="`https://static.shuhelper.cn/avatar_default.jpg`" slot="avatar" />
@@ -37,14 +37,14 @@
             <mu-card-title title="队伍信息" subTitle="Team Info" />
             <mu-card-text>
               您尚未加入任何队伍，您现在可以：
-              <mu-flat-button primary @click="openJoin">加入队伍</mu-flat-button> 或
-              <mu-flat-button primary @click="openCreate">创建队伍</mu-flat-button>
+              <mu-flat-button primary @click.native="openJoin">加入队伍</mu-flat-button> 或
+              <mu-flat-button primary @click.native="openCreate">创建队伍</mu-flat-button>
               <mu-dialog :open="joinDialog" title="加入队伍">
                 请联系您的队长索取加队链接。
                 <mu-flat-button label="确定" slot="actions" primary @click="close" />
               </mu-dialog>
               <mu-dialog :open="createDialog" title="输入队伍名来创建一支队伍">
-                <mu-text-field style="width:100%;" label="队伍名" errorText="请输入队伍名" v-model="teamName" maxLength="10" required/><br/>
+                <mu-text-field style="width:100%;" label="队伍名" errorText="请输入队伍名" v-model="teamName" :maxLength="10" required/><br/>
                 <mu-flat-button label="创建队伍" slot="actions" primary @click="createTeam" />
                 <mu-flat-button label="关闭" slot="actions" primary @click="close" />
               </mu-dialog>
@@ -99,7 +99,7 @@
 <script>
 // import { mapState } from 'vuex'
 export default {
-  name: 'hello',
+  // name: 'hello',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -136,6 +136,10 @@ export default {
         .then((response) => {
           this.team = response.data.team
           this.personalTeam = response.data.personal_team
+          this.$store.commit('updateTeam', {
+            id: this.team.id,
+            name: this.team.name
+          })
         })
         .catch((err) => {
           console.log(err)
@@ -155,9 +159,12 @@ export default {
       this.$http.post('/api/teams/', {
         name: this.teamName
       }).then((response) => {
-        console.log(response)
-        this.close()
-        this.getTeam()
+        if (response.data.success) {
+          this.close()
+          this.getTeam()
+        } else {
+          alert(response.data.reason)
+        }
       })
     },
     removeMember (index) {
