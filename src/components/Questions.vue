@@ -10,11 +10,9 @@
         <div class="wrapper-qstn">
           <div class="qstn-header">
             <div class="qstn-title">{{stage
-              <0? '报名阶段':STAGE[stage]}} 
-              
-              <mu-flat-button v-if="questions.length" primary style="float:right;" @click="onFinishClick">{{ finish?"已提交":"提交答卷"}}</mu-flat-button>
-              <mu-flat-button  style="float:right;margin-right:20px;" @click="getAllAnswers">刷新答案</mu-flat-button>
-              
+              <0? '报名阶段':STAGE[stage]}} <mu-flat-button v-if="questions.length" primary style="float:right;" @click="onFinishClick">{{ finish?"已提交":"提交答卷"}}</mu-flat-button>
+                <mu-flat-button v-if="questions.length" style="float:right;margin-right:20px;" @click="getAllAnswers">刷新答案</mu-flat-button>
+
                 <!-- <mu-flat-button primary style="float:right;" @click="finish">{{ clock}}</mu-flat-button> -->
             </div>
             <div class="qstn-description">
@@ -67,7 +65,7 @@
 /* eslint-disable no-unused-vars */
 // const STAGE = ['预选赛', '团体赛', '复活赛', '个人赛']
 const STAGETIME = [
-  new Date(2017, 9, 15, 0, 0, 0, 0),
+  new Date(2017, 9, 19, 0, 0, 0, 0),
   new Date(2017, 9, 23, 0, 0, 0, 0),
   new Date(2017, 10, 4, 12, 30, 0, 0),
   new Date(2017, 10, 4, 13, 15, 0, 0),
@@ -167,6 +165,10 @@ export default {
     getAllQuestions: function () {
       this.$http.get(`/api/questionset/${this.stage}/questions/`)
         .then((response) => {
+          if (!response.data.success) {
+            alert(response.data.reason)
+            return
+          }
           for (var i = 0; i < response.data.questions.length; i++) {
             this.questions.push({
               title: response.data.questions[i].content,
