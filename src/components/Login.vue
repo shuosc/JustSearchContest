@@ -6,6 +6,9 @@
         <mu-card-header>
           登录
         </mu-card-header>
+        <mu-content-block>
+          受学校网络影响，登录可能不太稳定，请多尝试几次。目前预选赛已延期至25日早十点
+        </mu-content-block>
         <div id="input">
           <mu-text-field label="一卡通账号" labelFloat icon=":iconfont icon-account" :maxLength="8" v-model="cardID" />
           <mu-text-field label="密码" :type="passwordVisible?'text':'password'" labelFloat v-model="password" icon=":iconfont icon-password" />
@@ -37,34 +40,37 @@ export default {
   methods: {
     onLoginClick: function () {
       this.loading = true
-      this.$http.post('/api/login/', {
-        card_id: this.cardID,
-        password: this.password
-      }).then((response) => {
-        let data = response.data
-        this.$store.commit('login', {
-          cardID: data.id,
-          name: data.name,
-          avatar: data.avatar,
-          token: data.token,
-          loginState: true
+      this.$http
+        .post('/api/login/', {
+          card_id: this.cardID,
+          password: this.password
         })
-        if (this.$route.query.team) {
-          this.$http.post(`/api/teams/${this.$route.query.team}/members/`, {})
-            .then((response) => {
-              this.loading = false
-              if (!response.data.success) {
-                alert(response.data.reason)
-                this.$router.push('/center')
-              } else {
-                this.$router.push('/center')
-              }
-            })
-        } else {
-          this.$router.push('/center')
-        }
-      })
-        .catch((err) => {
+        .then(response => {
+          let data = response.data
+          this.$store.commit('login', {
+            cardID: data.id,
+            name: data.name,
+            avatar: data.avatar,
+            token: data.token,
+            loginState: true
+          })
+          if (this.$route.query.team) {
+            this.$http
+              .post(`/api/teams/${this.$route.query.team}/members/`, {})
+              .then(response => {
+                this.loading = false
+                if (!response.data.success) {
+                  alert(response.data.reason)
+                  this.$router.push('/center')
+                } else {
+                  this.$router.push('/center')
+                }
+              })
+          } else {
+            this.$router.push('/center')
+          }
+        })
+        .catch(err => {
           console.log(err)
           this.loading = false
         })
@@ -75,38 +81,41 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  #index
-    margin 0
-    height 100%
-  
-  #stepper
-    padding-top 100px
-    width 80%
-    margin 0 auto
-    .mu-step-label
-      font-size 20px
-    .mu-step-label.active
-        color #fff !important
-      
-  #login
-    width 400px
-    margin 0 auto
-    padding 100px 0
-  
-  .mu-card
-    background-color rgba(255, 255, 255, 0.9)
-    text-align center
-    padding-bottom 80px
-    border-radius 5px
-    .mu-card-header
-      font-size 1.2rem
-      padding-top 40px
-    #input
-      width 300px
-      text-align left
-      margin 0 auto
-      padding-bottom 40px
+#index
+  margin 0
+  height 100%
 
+#stepper
+  padding-top 100px
+  width 80%
+  margin 0 auto
+
+  .mu-step-label
+    font-size 20px
+
+  .mu-step-label.active
+    color #fff !important
+
+#login
+  width 400px
+  margin 0 auto
+  padding 100px 0
+
+.mu-card
+  background-color rgba(255, 255, 255, 0.9)
+  text-align center
+  padding-bottom 80px
+  border-radius 5px
+
+  .mu-card-header
+    font-size 1.2rem
+    padding-top 40px
+
+  #input
+    width 300px
+    text-align left
+    margin 0 auto
+    padding-bottom 40px
 </style>
 
 

@@ -15,7 +15,7 @@
             <mu-list>
               <!-- <mu-sub-header></mu-sub-header> -->
               <mu-list-item :title="`#${index+1} ${team.name} 队`" v-for="(team,index) in rank" :key="index">
-                {{team._id}}
+                <mu-circular-progress slot="left" :size="20" color="green" mode="determinate" :value="team.ratio*100" :max="100" /> {{team._id}}
               </mu-list-item>
             </mu-list>
           </mu-card>
@@ -36,24 +36,22 @@ export default {
     }
   },
   created () {
-    this.$http.get('/api/stage/')
-      .then((response) => {
-        this.stage = response.data.stage >= 0 ? response.data.stage.toString() : '0'
-        this.getRank()
-      })
+    this.$http.get('/api/stage/').then(response => {
+      this.stage =
+        response.data.stage >= 0 ? response.data.stage.toString() : '0'
+      this.getRank()
+    })
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     handleTabChange: function (value) {
       this.stage = value
       this.getRank()
     },
     getRank: function (stage) {
-      this.$http.get(`/api/rank/${this.stage}/`)
-        .then((response) => {
-          this.rank = response.data
-        })
+      this.$http.get(`/api/rank/${this.stage}/`).then(response => {
+        this.rank = response.data
+      })
     }
   }
 }
