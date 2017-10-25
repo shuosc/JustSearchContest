@@ -68,23 +68,23 @@
                   </mu-tr>
                   <mu-tr>
                     <mu-th>预选赛</mu-th>
-                    <mu-td v-if="stage>0">{{personalTeam.ranks[0] + 1}}/{{teamCount[0]}}</mu-td>
-                    <mu-td v-if="stage>0">{{personalTeam.points[0]}}</mu-td>
+                    <mu-td v-if="stage>=0">{{personalTeam.ranks[0] + 1}}/{{teamCount[0]}}</mu-td>
+                    <mu-td v-if="stage>=0">{{personalTeam.points[0]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>团体赛</mu-th>
-                    <mu-td v-if="stage>1">{{personalTeam.ranks[1] + 1}}/{{teamCount[1]}}</mu-td>
-                    <mu-td v-if="stage>1">{{personalTeam.points[1]}}</mu-td>
+                    <mu-td v-if="stage>=1">{{personalTeam.ranks[1] + 1}}/{{teamCount[1]}}</mu-td>
+                    <mu-td v-if="stage>=1">{{personalTeam.points[1]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>复活赛</mu-th>
-                    <mu-td v-if="stage>2">{{personalTeam.ranks[2] + 1}}/{{teamCount[2]}}</mu-td>
-                    <mu-td v-if="stage>2">{{personalTeam.points[2]}}</mu-td>
+                    <mu-td v-if="stage>=2">{{personalTeam.ranks[2] + 1}}/{{teamCount[2]}}</mu-td>
+                    <mu-td v-if="stage>=2">{{personalTeam.points[2]}}</mu-td>
                   </mu-tr>
                   <mu-tr>
                     <mu-th>个人赛</mu-th>
-                    <mu-td v-if="stage>3">{{personalTeam.ranks[3] +1 }}/{{teamCount[3]}}</mu-td>
-                    <mu-td v-if="stage>3">{{personalTeam.points[3]}}</mu-td>
+                    <mu-td v-if="stage>=3">{{personalTeam.ranks[3] +1 }}/{{teamCount[3]}}</mu-td>
+                    <mu-td v-if="stage>=3">{{personalTeam.points[3]}}</mu-td>
                   </mu-tr>
                 </mu-table>
               </mu-card-text>
