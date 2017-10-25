@@ -6,9 +6,6 @@
         <mu-card-header>
           登录
         </mu-card-header>
-        <mu-content-block>
-          受学校网络影响，登录可能不太稳定，请多尝试几次。目前预选赛已延期至25日早十点
-        </mu-content-block>
         <div id="input">
           <mu-text-field label="一卡通账号" labelFloat icon=":iconfont icon-account" :maxLength="8" v-model="cardID" />
           <mu-text-field label="密码" :type="passwordVisible?'text':'password'" labelFloat v-model="password" icon=":iconfont icon-password" />
@@ -18,6 +15,7 @@
           <mu-circular-progress v-if="loading" :size="20" />登录</mu-raised-button>
       </mu-card>
     </div>
+  
   </div>
 </template>
 
@@ -100,6 +98,13 @@ export default {
   width 400px
   margin 0 auto
   padding 100px 0
+
+#info
+  width 90%
+  margin 0 auto
+  padding 10px 0
+  font-size 16px
+
 
 .mu-card
   background-color rgba(255, 255, 255, 0.9)
