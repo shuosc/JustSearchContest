@@ -183,7 +183,7 @@ export default {
         })
     },
     getAllAnswers: function () {
-      this.$http.get('/api/questionset/0/answers/')
+      this.$http.get(`/api/questionset/${this.stage}/answers/`)
         .then((response) => {
           for (let i = 0; i < response.data.length; i++) {
             let item = response.data[i]

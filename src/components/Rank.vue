@@ -14,8 +14,13 @@
             </mu-tabs>
             <mu-list>
               <!-- <mu-sub-header></mu-sub-header> -->
-              <mu-list-item :title="`#${index+1} ${team.name} 队`" v-for="(team,index) in rank" :key="index">
+              <mu-list-item :title="`#${index+1} ${team.name} 队`"
+                v-for="(team,index) in rank" :key="index">
                 {{team._id}}
+                <mu-linear-progress mode="determinate"
+                  :value="progress" :max="total" v-if="questions.length"
+                />
+
               </mu-list-item>
             </mu-list>
           </mu-card>
