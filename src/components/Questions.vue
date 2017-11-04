@@ -66,13 +66,13 @@
 // const STAGE = ['预选赛', '团体赛', '复活赛', '个人赛']
 const STAGETIME = [
   new Date(2017, 9, 19, 0, 0, 0, 0),
-  new Date(2017, 9, 23, 0, 0, 0, 0),
-  new Date(2017, 10, 4, 12, 30, 0, 0),
-  new Date(2017, 10, 4, 13, 15, 0, 0),
-  new Date(2017, 10, 4, 13, 30, 0, 0),
+  new Date(2017, 9, 25, 10, 0, 0, 0),
+  new Date(2017, 10, 4, 13, 00, 0, 0),
   new Date(2017, 10, 4, 13, 45, 0, 0),
-  new Date(2017, 10, 4, 15, 0, 0, 0),
-  new Date(2017, 10, 4, 16, 0, 0, 0)
+  new Date(2017, 10, 4, 16, 00, 0, 0),
+  new Date(2017, 10, 4, 16, 12, 0, 0),
+  new Date(2017, 10, 4, 15, 30, 0, 0),
+  new Date(2017, 10, 4, 16, 30, 0, 0)
 ]
 import Stepper from '@/components/Stepper.vue'
 export default {

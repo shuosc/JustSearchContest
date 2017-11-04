@@ -20,7 +20,6 @@
                 <mu-linear-progress mode="determinate"
                   :value="progress" :max="total" v-if="questions.length"
                 />
-
               </mu-list-item>
             </mu-list>
           </mu-card>
@@ -41,24 +40,22 @@ export default {
     }
   },
   created () {
-    this.$http.get('/api/stage/')
-      .then((response) => {
-        this.stage = response.data.stage >= 0 ? response.data.stage.toString() : '0'
-        this.getRank()
-      })
+    this.$http.get('/api/stage/').then(response => {
+      this.stage =
+        response.data.stage >= 0 ? response.data.stage.toString() : '0'
+      this.getRank()
+    })
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     handleTabChange: function (value) {
       this.stage = value
       this.getRank()
     },
     getRank: function (stage) {
-      this.$http.get(`/api/rank/${this.stage}/`)
-        .then((response) => {
-          this.rank = response.data
-        })
+      this.$http.get(`/api/rank/${this.stage}/`).then(response => {
+        this.rank = response.data
+      })
     }
   }
 }

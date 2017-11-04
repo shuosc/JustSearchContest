@@ -8,7 +8,7 @@
       </mu-step>
       <mu-step>
         <mu-step-label>
-          预选赛(10/15~10/23)
+          预选赛(10/15~10/24)
         </mu-step-label>
       </mu-step>
       <mu-step>
